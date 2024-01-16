@@ -5,16 +5,24 @@
   "author": "First Last <first.last@example.com>",
   "main": "index.ts",
   "private": true,
+  "license": "MIT",
+  "type": "module",
   "scripts": {
-    "dev": "ts-node index.ts"
+    "start": "node dist/index.js",
+    "dev": "ts-node index.mjs",
+    "build": "tsc"
   },
   "dependencies": {
     "aws-sdk": "^2.1536.0",
-    "chrome-aws-lambda": "^9.1.0",
+    "chrome-aws-lambda": "^10.1.0",
     "express": "^4.16.1",
-    "puppeteer": "^21.7.0"
+    "puppeteer": "^21.7.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
   },
   "devDependencies": {
-    "ts-node": "^10.9.2"
+    "@types/node": "^20.11.3",
+    "ts-node": "10.9.2",
+    "typescript": "^5.3.3"
   }
 }

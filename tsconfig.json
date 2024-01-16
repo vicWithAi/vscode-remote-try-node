@@ -1,16 +1,16 @@
 {
     "compilerOptions": {
-        "lib": ["ES5", "ES6", "dom"],
-        "outDir":"./dist/", 
-        "sourceMap":true,
-        "noImplicitAny" :true,
-        "module": "commonjs",
-        "target": "es6",
-        "moduleResolution": "node",
-        "esModuleInterop": true,
-        "jsx": "react",
-        },
-        "include" : ["./src/**/*"]
-
-}
-        
+      "module": "ESNext",
+      "target": "es2017",
+      "moduleResolution": "node",
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "outDir": "./dist"
+    },
+    "include": [
+      "index.ts"
+    ]
+  }
+  

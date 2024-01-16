@@ -1,46 +1,66 @@
-'use strict'
+// Import necessary modules
 import puppeteer from 'puppeteer-core';
+import pluginStealth from 'puppeteer-extra-plugin-stealth';
 import chromium from 'chrome-aws-lambda';
 
-const url = 'https://mookh.com/';
-//https://books.toscrape.com
+// Add other necessary imports...
 
+// Define the Product interface
+interface Product {
+  title: string;
+  price: string;
+  date: string;
+  eventName: string;
+  time: string;
+  location: string;
+}
+
+// Define the URL of the website you want to scrape
+const url = 'https://mookh.com/';
+
+// Main scraping function
 const main = async () => {
-    //console.log('Launching browser...');
-    const browser = await puppeteer.launch({ 
-        headless: true, 
-        executablePath: await chromium.executablePath, 
+  // Launch the browser without puppeteer-extra
+  const browser = await puppeteer.launch({
+    headless: true,
+    executablePath: '/usr/bin/chromium', // replace with your Chromium path
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+  });
+
+  try {
+    const page = await browser.newPage();
+    console.log('Navigating to URL:', url);
+    await page.goto(url, { waitUntil: 'load' });
+
+    // Modify the following code to extract the data you need from the Mookh website.
+    const products: Product[] = await page.evaluate(() => {
+      const products: Product[] = [];
+      const productElements = document.querySelectorAll('.sc-biBrSq dqPpVz');
+
+      productElements.forEach((product) => {
+        const title = (product.querySelector('.sc-eWvPJL hgQjmC') as HTMLElement).innerText.trim();
+        const price = (product.querySelector('.ellipsis') as HTMLElement).innerText.trim();
+        const date = (product.querySelector('.showcase-date-day') as HTMLElement)?.innerText.trim();
+        const eventName = (product.querySelector('.sc-gIRixj beiVbL') as HTMLElement)?.innerText.trim();
+        const time = (product.querySelector('.flex') as HTMLElement)?.innerText.trim();
+        const location = (product.querySelector('.ellipsis') as HTMLElement)?.innerText.trim();
+
+        products.push({ title, price, date, eventName, time, location });
+      });
+
+      return products;
     });
 
-    console.log('Creating new page...');
-    const page = await browser.newPage();
-
-    console.log('Navigating to URL:', url);
-    await page.goto(url);
-
-    console.log('Fetching data from the page...');
-    const eventData = await page.evaluate((url: string) => {
-        const eventdeets = Array.from(document.querySelectorAll('.product_pod'));
-        //class="sc-bBrOnJ jpgkRQ"
-        //src
-        //p
-        //a
-        //#text
-        //div class ...price =  css-cfsqhp-container
-        const data = eventdeets.map((event: any) => ({
-            title: event.querySelector('h3 a').getAttribute('title'),
-            price: (event.querySelector('.css-cfsqhp-container') as HTMLElement).innerText,
-            imgSrc: url + event.querySelector('img').getAttribute('src'),
-        }));
-        return data;
-    }, url);
-
-    console.log('Event data:', eventData);
-
+    console.log('Product data:', products);
+  } catch (error) {
+    console.error('Error during scraping:', error);
+  } finally {
     console.log('Closing the browser...');
     await browser.close();
-
     console.log('Browser closed.');
+  }
 };
 
+// Call the main function
 main();
