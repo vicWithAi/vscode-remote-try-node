@@ -6,9 +6,12 @@
   "main": "server.js",
   "private": true,
   "scripts": {
-    "start": "node server.js"
+    "dev": "ts-node index.ts"
   },
   "dependencies": {
     "express": "^4.16.1"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2"
   }
 }
