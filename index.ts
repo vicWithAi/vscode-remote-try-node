@@ -11,10 +11,15 @@ const main = async () => {
     const page = await browser.newPage()
     await page.goto(url)
 
-    const eventData = await page.evaluate(() => {
-        const eventdeets = Array.from(document.querySelectorAll('.sc-dkmKpi.lfQrzt'));
-        return eventdeets;
-    });
+    const eventData = await page.evaluate((url:string) => {
+        const eventdeets = Array.from(document.querySelectorAll('.product_pod')); //.sc-dkmKpi.lfQrzt class for events
+        const data = eventdeets.map((book:any)=>({
+            title:book.querySelector('h3 a').getAttribute('title'),
+            price: book.querySelector('price_color').innerText,
+            imgSrc: url + book.querySelector('img').getAttribute('src')
+        }))
+        return data;
+    }, url)
 
     console.log(eventData);
 
