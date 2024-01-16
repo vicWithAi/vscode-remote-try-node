@@ -6,8 +6,8 @@ const url ='https://books.toscrape.com';
 
 
 const main = async () => {
-    const browser = await puppeteer.launch({headless:false})
-    console.log("123")
+    const browser = await puppeteer.launch({headless:false,args: ["--no-sandbox", "--disable-setuid-sandbox"]})
+    
     const page = await browser.newPage()
     await page.goto(url)
 
